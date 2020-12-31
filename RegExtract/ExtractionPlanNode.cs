@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using RegExtract.ExtractionPlanNodeTypes;
@@ -250,23 +251,19 @@ namespace RegExtract
             }
         }
 
-        protected const string VALUETUPLE_TYPENAME = "System.ValueTuple`";
-        protected const string LIST_TYPENAME = "System.Collections.Generic.List`";
-        protected const string NULLABLE_TYPENAME = "System.Nullable`";
-
-        protected static bool IsList(Type type)
+        protected internal static bool IsList(Type type)
         {
-            return type.FullName.StartsWith(LIST_TYPENAME);
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
         }
 
-        protected static bool IsTuple(Type type)
+        protected internal static bool IsTuple(Type type)
         {
-            return type.FullName.StartsWith(VALUETUPLE_TYPENAME);
+            return typeof(ITuple).IsAssignableFrom(type);
         }
 
-        protected static bool IsNullable(Type type)
+        protected internal static bool IsNullable(Type type)
         {
-            return type.FullName.StartsWith(NULLABLE_TYPENAME);
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
         protected static IEnumerable<Capture> AsEnumerable(CaptureCollection cc)

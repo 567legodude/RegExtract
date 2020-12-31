@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -47,25 +48,11 @@ namespace RegExtract
             Plan = AssignTypesToTree_0(_tree.Tree, type);
         }
 
+        protected static bool IsList(Type type) => ExtractionPlanNode.IsList(type);
 
-        protected const string VALUETUPLE_TYPENAME = "System.ValueTuple`";
-        protected const string LIST_TYPENAME = "System.Collections.Generic.List`";
-        protected const string NULLABLE_TYPENAME = "System.Nullable`";
+        protected static bool IsTuple(Type type) => ExtractionPlanNode.IsTuple(type);
 
-        protected bool IsList(Type type)
-        {
-            return type.FullName.StartsWith(LIST_TYPENAME);
-        }
-
-        protected bool IsTuple(Type type)
-        {
-            return type.FullName.StartsWith(VALUETUPLE_TYPENAME);
-        }
-
-        protected bool IsNullable(Type type)
-        {
-            return type.FullName.StartsWith(NULLABLE_TYPENAME);
-        }
+        protected static bool IsNullable(Type type) => ExtractionPlanNode.IsNullable(type);
 
         private bool IsContainerOfSize(Type type, int numParams)
         {
